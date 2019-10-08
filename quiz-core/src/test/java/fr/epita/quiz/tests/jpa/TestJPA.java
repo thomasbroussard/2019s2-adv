@@ -49,5 +49,25 @@ public class TestJPA {
 		Question retrievedQuestion = session.get(Question.class, question.getId());
 		Assert.assertEquals(questionContent,retrievedQuestion.getQuestionContent());
 	}
+	
+	
+	@Test
+	public void testUpdate() {
+		//given sessionFactory
+		String questionContent = "How to define a property in a maven pom file?";
+		String questionContentModified = "How to define a parent pom in maven?";
+		Question question = new Question(questionContent);
+		Session session = sessionFactory.openSession();
+		session.save(question);
+		
+		//when
+		question.setQuestionContent(questionContentModified);
+		session.update(question);
+		
+		
+		//then
+		Question retrievedQuestion = session.get(Question.class, question.getId());
+		Assert.assertEquals(questionContentModified,retrievedQuestion.getQuestionContent());
+	}
 
 }
