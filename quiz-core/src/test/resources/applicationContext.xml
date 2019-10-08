@@ -50,4 +50,6 @@
 		</property>
 	</bean>
 
+
+	<bean id="questionDAO" class="fr.epita.quiz.services.QuestionDAO" />
 </beans>

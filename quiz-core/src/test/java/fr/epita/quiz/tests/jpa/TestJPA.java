@@ -1,9 +1,14 @@
 package fr.epita.quiz.tests.jpa;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import javax.inject.Inject;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +26,7 @@ public class TestJPA {
 	
 	@Inject
 	SessionFactory sessionFactory;
+	
 	
 	@Test
 	public void testHibernateSession() {
@@ -43,6 +49,7 @@ public class TestJPA {
 		//when
 		Session session = sessionFactory.openSession();
 		session.save(question);
+		
 		
 		
 		//then
@@ -69,5 +76,65 @@ public class TestJPA {
 		Question retrievedQuestion = session.get(Question.class, question.getId());
 		Assert.assertEquals(questionContentModified,retrievedQuestion.getQuestionContent());
 	}
+	
+	@Test
+	public void testDelete() {
+		//given sessionFactory
+		String questionContent = "How to define a property in a maven pom file?";
+	
+		Question question = new Question(questionContent);
+		Session session = sessionFactory.openSession();
+		session.save(question);
+		
+		//when
+		session.delete(question);
+		
+		
+		//then
+		Question retrievedQuestion = session.get(Question.class, question.getId());
+		Assert.assertNull(retrievedQuestion);
+	}
+	
+	@Test
+	public void testSearch() {
+		//given sessionFactory
+		String questionContent = "How to define a property in a maven pom file?";
+	
+		Question question = new Question(questionContent);
+		Session session = sessionFactory.openSession();
+		session.save(question);
+		
+		//when
+		Query<Question> searchQuery = 
+				session.createQuery("from Question q where q.questionContent like :pContent", Question.class);
+		
+		searchQuery.setParameter("pContent", "%maven%" );
+		List<Question> questionList = searchQuery.getResultList();
+		
+		//then
+		List<String> notContainingMaven = new ArrayList<>();
+		
+		questionList.stream().forEach( q -> {
+			if (q.getQuestionContent().contains("maven")){
+				notContainingMaven.add("");
+			}
+		} );
+		questionList.stream().forEach(new Consumer<Question>() {
+
+			@Override
+			public void accept(Question t) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		Assert.assertTrue(notContainingMaven.isEmpty());
+		
+		
+		
+		
+	}
+	
+	
 
 }
