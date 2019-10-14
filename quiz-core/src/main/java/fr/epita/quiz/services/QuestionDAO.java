@@ -1,16 +1,22 @@
 package fr.epita.quiz.services;
 
-import java.util.List;
-
-import org.hibernate.Session;
+import java.util.Map;
 
 import fr.epita.quiz.datamodel.Question;
 
 public class QuestionDAO extends DAO<Question>{
 
 	@Override
-	public List<Question> search(Question criteria) {
-		Session session = getSession();
+	protected String getQueryString() {
+		return "from Question q where q.questionContent like :pContent";
 	}
+
+	@Override
+	protected void fillParametersMap(Map<String,Object> map, Question question) {
+		map.put("pContent", question.getQuestionContent());
+
+	}
+
+
 
 }

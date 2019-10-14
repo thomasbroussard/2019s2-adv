@@ -1,12 +1,15 @@
 package fr.epita.quiz.services;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 public abstract class DAO<T> {
 
@@ -45,7 +48,20 @@ public abstract class DAO<T> {
 		session.delete(t);
 	}
 	
-	public abstract List<T> search(T criteria);
+	public List<T> search(T criteria){
+		
+		Query<T> query = getSession().createQuery(getQueryString());
+		Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+		fillParametersMap(parameters,criteria);
+		
+		parameters.forEach((k,v) -> query.setParameter(k,v));
+		
+		return query.getResultList();
+		
+	}
+
+	protected abstract String getQueryString();
+	protected abstract void fillParametersMap(Map<String,Object> map, T t);
 	
 	
 }
