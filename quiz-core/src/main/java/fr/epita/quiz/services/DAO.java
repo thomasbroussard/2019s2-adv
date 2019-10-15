@@ -5,58 +5,50 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 public abstract class DAO<T> {
 
-	@Inject
-	SessionFactory sf;
-
+	@PersistenceContext
+	EntityManager em;
+	
+	
+	@Transactional
 	public void create(T t) {
-		Session session = getSession();
-		session.save(t);
+		
+		em.persist(t);
 
 	}
 
-	protected Session getSession() {
-		Session session = null;
-		try {
-			session = sf.getCurrentSession();
-		} catch (Exception e) {
-			session = sf.openSession();
-		}
-		return session;
-	}
+
 
 	public T getById(Serializable id, Class<T> clazz) {
 
-		return getSession().get(clazz, id);
+		return em.find(clazz, id);
 	}
 
 	public void update(T t) {
-		Session session = getSession();
-		session.update(t);
+
+		em.merge(t);
 
 	}
 
 	public void delete(T t) {
-		Session session = getSession();
-		session.delete(t);
+		em.remove(t);
 	}
 	
 	public List<T> search(T criteria){
 		
-		Query<T> query = getSession().createQuery(getQueryString());
+		Query searchQuery = em.createQuery(getQueryString());
 		Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 		fillParametersMap(parameters,criteria);
 		
-		parameters.forEach((k,v) -> query.setParameter(k,v));
+		parameters.forEach((k,v) -> searchQuery.setParameter(k,v));
 		
-		return query.getResultList();
+		return (List<T>) searchQuery.getResultList();
 		
 	}
 

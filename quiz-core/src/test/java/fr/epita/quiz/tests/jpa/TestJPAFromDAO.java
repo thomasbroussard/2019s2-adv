@@ -1,6 +1,8 @@
 package fr.epita.quiz.tests.jpa;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,8 +23,11 @@ public class TestJPAFromDAO {
 	@Inject
 	QuestionDAO questionDAO;
 	
-	@Inject
-	SessionFactory sf;
+//	@Inject
+//	SessionFactory sf;
+	
+	@PersistenceContext
+	EntityManager em;
 	
 	@Test
 	public void testCreate() {
@@ -37,8 +42,8 @@ public class TestJPAFromDAO {
 		
 		
 		//then
-		Session session = sf.openSession();
-		Assert.assertNotNull(session.get(Question.class, question.getId()));
+		
+		Assert.assertNotNull(em.find(Question.class, question.getId()));
 		
 		
 		

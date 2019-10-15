@@ -22,7 +22,9 @@ public class Question {
 	private String questionContent;
 
 	
-	
+	public Question() {
+
+	}
 
 	public Question(String questionContent) {
 		this.questionContent = questionContent;
