@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +20,7 @@ import fr.epita.quiz.datamodel.Question;
 import fr.epita.quiz.services.QuestionDAO;
 
 @Path("/questions/")
+
 public class QuestionResource {
 	
 	
@@ -37,9 +39,9 @@ public class QuestionResource {
 	}
 	
 	@GET
-	@Path("/")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getQuestionById(int id) {
+	public Response getQuestionById(@PathParam("id") int id) {
 		//create a question 
 		
 		Question question = dao.getById(id, Question.class);
@@ -49,6 +51,7 @@ public class QuestionResource {
 
 	
 	@GET
+	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response searchQuestions(@QueryParam("qContent") String questionContent) {
 		//create a question 
