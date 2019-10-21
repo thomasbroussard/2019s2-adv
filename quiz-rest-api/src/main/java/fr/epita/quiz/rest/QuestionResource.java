@@ -1,5 +1,7 @@
 package fr.epita.quiz.rest;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,11 +33,11 @@ public class QuestionResource {
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createQuestion(@RequestBody Question question) {
+	public Response createQuestion(@RequestBody Question question) throws URISyntaxException {
 		//create a question 
-		//dao.create(question);
+		dao.create(question);
 		System.out.println("received creation order for question : " +  question);
-		return Response.ok().build();
+		return Response.created(new URI("questions/"  + String.valueOf(question.getId()))).build();
 	}
 	
 	@GET
@@ -55,11 +57,7 @@ public class QuestionResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response searchQuestions(@QueryParam("qContent") String questionContent) {
 		//create a question 
-		dao.search(new Question(questionContent));
-		
-		System.out.println("question Content : " + questionContent);
-		List<Question> searchList = Arrays.asList(new Question("Test!"));
-		
+		List<Question> searchList = dao.search(new Question(questionContent));
 		return Response.ok(searchList).build();
 	}
 	
