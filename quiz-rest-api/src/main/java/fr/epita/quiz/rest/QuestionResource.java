@@ -61,7 +61,5 @@ public class QuestionResource {
 		return Response.ok(searchList).build();
 	}
 	
-	
-	
 
 }

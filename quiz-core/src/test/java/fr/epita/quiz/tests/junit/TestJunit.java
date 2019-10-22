@@ -1,5 +1,7 @@
 package fr.epita.quiz.tests.junit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -10,41 +12,43 @@ import org.junit.Test;
 public class TestJunit {
 	
 	
+	private static final Logger LOGGER = LogManager.getLogger(); 
+	
 	@BeforeClass
 	public static void beforeAll() {
-		System.out.println("beforeAll");
+		LOGGER.info("beforeAll");
 	}
 	
 	@Before
 	public void prepareForEach() {
-		System.out.println("beforeEach");
+		LOGGER.info("beforeEach");
 	}
 	
 	@Test
 	public void firstSuccessTest() {
-		System.out.println("testSucces");
+		LOGGER.info("testSucces");
 		
 	}
 	@Test
 	public void firstFailTest() {
-		System.out.println("testFail");
+		LOGGER.info("testFail");
 		Assert.fail();
 	}
 	@Test
 	public void firstErrorTest() {
-		System.out.println("testError");
+		LOGGER.error("testError");
 		int zero = 0;
 		double other = 1/zero;
 	}
 	
 	@After
 	public void tearDownForEach() {
-		System.out.println("afterEach");
+		LOGGER.info("afterEach");
 	}
 	
 	@AfterClass
 	public static void afterAll() {
-		System.out.println("afterAll");
+		LOGGER.info("afterAll");
 	}
 
 }
