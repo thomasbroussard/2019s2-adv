@@ -16,6 +16,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import fr.epita.quiz.datamodel.Question;
@@ -29,14 +31,17 @@ public class QuestionResource {
 	@Inject
 	QuestionDAO dao;
 	
+	private static final Logger LOGGER = LogManager.getLogger(QuestionResource.class);
+	
 	
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createQuestion(@RequestBody Question question) throws URISyntaxException {
+		LOGGER.debug("entering => createQuestion() with parameters : {} ", question);
 		//create a question 
 		dao.create(question);
-		System.out.println("received creation order for question : " +  question);
+		LOGGER.info("received creation order for question : {}",  question);
 		return Response.created(new URI("questions/"  + String.valueOf(question.getId()))).build();
 	}
 	

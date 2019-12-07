@@ -16,7 +16,7 @@ public class QuestionDAO extends DAO<Question>{
 
 	@Override
 	protected void fillParametersMap(Map<String,Object> map, Question question) {
-		map.put("pContent", question.getQuestionContent());
+		map.put("pContent", "%" + question.getQuestionContent() + "%");
 
 	}
 
